@@ -1,13 +1,25 @@
 import React,{useState} from 'react';
+import { useHistory } from 'react-router';
+import {auth} from '../firebase';
 
 const Singup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+
+    let history=useHistory()
   
-    const onHandleSubmit=(e)=>{
+    const onHandleSubmit= async (e)=>{
   e.preventDefault();
   console.log(email,password);
-  
+
+  try{
+    const result =await auth.createUserWithEmailAndPassword(email, password);
+    console.log(result);
+    window.M.toast({html: `Welcome ${result.user.email}`,classes:'green'})
+    history.push('/')
+  }catch(err){
+     window.M.toast({html: err.message ,classes:'red'})
+  }
     }
    return (
     <div className='center container' style={{width:"50vw"}}>
